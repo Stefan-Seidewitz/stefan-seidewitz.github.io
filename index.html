@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow with Music</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #slideshow {
+            position: relative;
+            width: 80%;
+            height: 80%;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .active {
+            opacity: 1;
+        }
+        audio {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="slideshow">
+        <!-- Slides will be dynamically added here -->
+    </div>
+    <audio controls autoplay>
+        <source src="music/2001ASpaceOdyssey.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        // Specify the folder and image file names
+        const images = [
+            'images/6557cc6f-0807-4a6e-958e-87a0dda161be.jpg',
+            'images/bd705a47-96d1-4a51-ad14-6d2d0773276e.jpg',
+            'images/IMG_3939.JPG',
+			'images/IMG_3946.JPG',
+			'images/IMG_4290.JPG',
+            // Add more image paths as needed
+        ];
+
+        const slideshow = document.getElementById('slideshow');
+
+        // Dynamically create image elements
+        images.forEach((src, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide' + (index === 0 ? ' active' : '');
+            const img = document.createElement('img');
+            img.src = src;
+            slide.appendChild(img);
+            slideshow.appendChild(slide);
+        });
+
+        // Slideshow logic
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        setInterval(() => {
+            slides[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % slides.length;
+            slides[currentIndex].classList.add('active');
+        }, 3000); // Change slide every 3 seconds
+    </script>
+</body>
+</html>
