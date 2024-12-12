@@ -14,11 +14,40 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        #splash-screen button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #splash-screen button:hover {
+            background: #0056b3;
         }
         #slideshow {
             position: relative;
             width: 100%;
             height: 100%;
+            display: none; /* Hidden initially until splash is dismissed */
         }
         .slide {
             position: absolute;
@@ -39,21 +68,31 @@
             position: absolute;
             bottom: 10px;
             left: 10px;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <h1>In Erinnerung an Stefan Seidewitz</h1>
+        <p>Danke für die schönen Momente!</p>
+        <button id="start-slideshow">Start</button>
+    </div>
+
+    <!-- Slideshow -->
     <div id="slideshow">
         <!-- Slides will be dynamically added here -->
     </div>
-    <audio controls autoplay loop>
+
+    <audio id="background-music" loop>
         <source src="music/ColourfulWorld.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+
     <script>
-        // Specify the folder and image file names
         const images = [
-            'images/6557cc6f-0807-4a6e-958e-87a0dda161be.jpg',
+			'images/6557cc6f-0807-4a6e-958e-87a0dda161be.jpg',
             'images/bd705a47-96d1-4a51-ad14-6d2d0773276e.jpg',
             'images/IMG_3939.JPG',
 			'images/IMG_3946.JPG',
@@ -62,6 +101,9 @@
         ];
 
         const slideshow = document.getElementById('slideshow');
+        const splashScreen = document.getElementById('splash-screen');
+        const startButton = document.getElementById('start-slideshow');
+        const audio = document.getElementById('background-music');
 
         // Dynamically create image elements
         images.forEach((src, index) => {
@@ -77,11 +119,22 @@
         let currentIndex = 0;
         const slides = document.querySelectorAll('.slide');
 
-        setInterval(() => {
-            slides[currentIndex].classList.remove('active');
-            currentIndex = (currentIndex + 1) % slides.length;
-            slides[currentIndex].classList.add('active');
-        }, 3000); // Change slide every 3 seconds
+        function startSlideshow() {
+            splashScreen.style.display = 'none'; // Hide splash screen
+            slideshow.style.display = 'block'; // Show slideshow
+            audio.play().catch(err => {
+                console.log('Autoplay failed, user interaction required:', err);
+            }); // Play background music
+
+            setInterval(() => {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add('active');
+            }, 3000); // Change slide every 3 seconds
+        }
+
+        // Start slideshow on button click
+        startButton.addEventListener('click', startSlideshow);
     </script>
 </body>
 </html>
